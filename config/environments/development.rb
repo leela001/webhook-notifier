@@ -36,6 +36,8 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+  # to store emails as files in the tmp/mails directory
+  config.action_mailer.delivery_method = :file
 
   config.action_mailer.perform_caching = false
 

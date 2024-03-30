@@ -7,6 +7,7 @@ class CustomersController < ApplicationController
             @customer = Customer.save_customer(params)
             if @customer.present?
                 notify_webhook_url(@customer)
+                CustomerMailer.welcome_mail_customer(@customer).deliver_now
                 render :json => @customer
             end
         rescue Exception => e
