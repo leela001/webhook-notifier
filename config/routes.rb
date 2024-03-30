@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   put 'customers/update/:id', :to => "customers#update"
   get 'customers', :to => "customers#index"
   get 'customers/:id', :to => "customers#show"
-  delete 'customers/:id', :to => "customers#destroy"
+  delete 'customers/delete/:id', :to => "customers#destroy"
 end

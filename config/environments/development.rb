@@ -9,6 +9,10 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  # configure the webhook urls
+  # pass the urls in string with comma(,) separation
+  config.webhook_urls = []
+
   # Show full error reports.
   config.consider_all_requests_local = true
 

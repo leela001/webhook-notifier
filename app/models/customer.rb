@@ -1,6 +1,6 @@
 class Customer < ApplicationRecord
     validates :first_name, presence: true
-    validates :phone_number, presence: true
+    validates :phone_number, presence: true, length: {is: 10}, numericality: {only_integer: true, message: "is not a number"}
     email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
     validates_format_of :email, :with => email_regex, :allow_blank => true
 
