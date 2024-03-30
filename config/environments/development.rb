@@ -39,6 +39,9 @@ Rails.application.configure do
   # to store emails as files in the tmp/mails directory
   config.action_mailer.delivery_method = :file
 
+  # secret webhook token
+  config.secret_webhook_token = "c8a2c183f8246427426f45d40515320ac30ed61b45f75ff1fffe1e2b141b6b28"
+
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.

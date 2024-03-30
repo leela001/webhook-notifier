@@ -11,7 +11,8 @@ class CustomersController < ApplicationController
                 render :json => @customer
             end
         rescue Exception => e
-            render :json => {message: e.message}, status: :unprocessable_entity
+            status_code = e.message == "Unauthorized" ? :unauthorized : :unprocessable_entity
+            render :json => {message: e.message}, status: status_code
         end
     end
 
@@ -37,7 +38,8 @@ class CustomersController < ApplicationController
                 render :json => @customer
             end
         rescue Exception => e
-            render :json => {message: e.message}, status: :unprocessable_entity
+            status_code = e.message == "Unauthorized" ? :unauthorized : :unprocessable_entity
+            render :json => {message: e.message}, status: status_code
         end
     end
 
@@ -53,8 +55,15 @@ class CustomersController < ApplicationController
     end
 
     private
+        def authenticate_webhook_request(request, token)
+            if request.headers['Authorization'] != "Bearer #{token}"
+                raise Exception.new("Unauthorized")
+            end
+        end
+
         def notify_webhook_url(data)
             urls = Rails.application.config.webhook_urls
+            auth_token = Rails.application.config.secret_webhook_token
             begin
                 urls.each do |uri|
                     conn = Faraday.new(:url => uri) do |builder|
@@ -66,6 +75,8 @@ class CustomersController < ApplicationController
                     resp = conn.post do |req|
                         req.headers["Content-Type"] = "application/json"
                         req.body =  data.to_json
+                        req.headers["Authorization"] = "Bearer #{auth_token}"
+                        authenticate_webhook_request(req, auth_token)
                     end
                     if resp.status == 200
                         Rails.logger.info("Successfully notified #{uri}: #{resp.status} -- response body: #{JSON.parse(resp.body)}")
